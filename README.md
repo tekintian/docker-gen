@@ -2,16 +2,16 @@ docker-gen
 =====
 
 ![latest 0.7.4](https://img.shields.io/badge/latest-0.7.4-green.svg?style=flat)
-[![Build Status](https://travis-ci.org/jwilder/docker-gen.svg?branch=master)](https://travis-ci.org/jwilder/docker-gen)
+[![Build Status](https://travis-ci.org/tekintian/docker-gen.svg?branch=master)](https://travis-ci.org/tekintian/docker-gen)
 ![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
 `docker-gen` is a file generator that renders templates using docker container meta-data.
 
 It can be used to generate various kinds of files for:
 
- * **Centralized logging** - [fluentd](https://github.com/jwilder/docker-gen/blob/master/templates/fluentd.conf.tmpl), logstash or other centralized logging tools that tail the containers JSON log file or files within the container.
- * **Log Rotation** - [logrotate](https://github.com/jwilder/docker-gen/blob/master/templates/logrotate.tmpl) files to rotate container JSON log files
- * **Reverse Proxy Configs** - [nginx](https://github.com/jwilder/docker-gen/blob/master/templates/nginx.tmpl), [haproxy](https://github.com/jwilder/docker-discover), etc. reverse proxy configs to route requests from the host to containers
+ * **Centralized logging** - [fluentd](https://github.com/tekintian/docker-gen/blob/master/templates/fluentd.conf.tmpl), logstash or other centralized logging tools that tail the containers JSON log file or files within the container.
+ * **Log Rotation** - [logrotate](https://github.com/tekintian/docker-gen/blob/master/templates/logrotate.tmpl) files to rotate container JSON log files
+ * **Reverse Proxy Configs** - [nginx](https://github.com/tekintian/docker-gen/blob/master/templates/nginx.tmpl), [haproxy](https://github.com/jwilder/docker-discover), etc. reverse proxy configs to route requests from the host to containers
  * **Service Discovery** - Scripts (python, bash, etc..) to register containers within [etcd](https://github.com/jwilder/docker-register), hipache, etc..
 
 ===
@@ -25,16 +25,16 @@ There are three common ways to run docker-gen:
 
 #### Host Install
 
-Linux/OSX binaries for release [0.7.4](https://github.com/jwilder/docker-gen/releases)
+Linux/OSX binaries for release [0.7.4](https://github.com/tekintian/docker-gen/releases)
 
-* [amd64](https://github.com/jwilder/docker-gen/releases/download/0.7.4/docker-gen-linux-amd64-0.7.4.tar.gz)
-* [i386](https://github.com/jwilder/docker-gen/releases/download/0.7.4/docker-gen-linux-i386-0.7.4.tar.gz)
-* [alpine-linux](https://github.com/jwilder/docker-gen/releases/download/0.7.4/docker-gen-alpine-linux-amd64-0.7.4.tar.gz)
+* [amd64](https://github.com/tekintian/docker-gen/releases/download/0.7.4/docker-gen-linux-amd64-0.7.4.tar.gz)
+* [i386](https://github.com/tekintian/docker-gen/releases/download/0.7.4/docker-gen-linux-i386-0.7.4.tar.gz)
+* [alpine-linux](https://github.com/tekintian/docker-gen/releases/download/0.7.4/docker-gen-alpine-linux-amd64-0.7.4.tar.gz)
 
 Download the version you need, untar, and install to your PATH.
 
 ```
-$ wget https://github.com/jwilder/docker-gen/releases/download/0.7.4/docker-gen-linux-amd64-0.7.4.tar.gz
+$ wget https://github.com/tekintian/docker-gen/releases/download/0.7.4/docker-gen-linux-amd64-0.7.4.tar.gz
 $ tar xvzf docker-gen-linux-amd64-0.7.4.tar.gz
 $ ./docker-gen
 ```
@@ -43,14 +43,14 @@ $ ./docker-gen
 
 Docker-gen can be bundled inside of a container along-side applications.
 
-[jwilder/nginx-proxy](https://index.docker.io/u/jwilder/nginx-proxy/) trusted build is an example of
+[tekintian/nginx-proxy](https://index.docker.io/u/tekintian/nginx-proxy/) trusted build is an example of
 running docker-gen within a container along-side nginx.
 [jwilder/docker-register](https://github.com/jwilder/docker-register) is an example of running
 docker-gen within a container to do service registration with etcd.
 
 #### Separate Container Install
 
-It can also be run as two separate containers using the [jwilder/docker-gen](https://index.docker.io/u/jwilder/docker-gen/)
+It can also be run as two separate containers using the [tekintian/docker-gen](https://index.docker.io/u/tekintian/docker-gen/)
 image, together with virtually any other image.
 
 This is how you could run the official [nginx](https://registry.hub.docker.com/_/nginx/) image and
@@ -66,11 +66,11 @@ $ docker run -d -p 80:80 --name nginx -v /tmp/nginx:/etc/nginx/conf.d -t nginx
 Fetch the template and start the docker-gen container with the shared volume:
 ```
 $ mkdir -p /tmp/templates && cd /tmp/templates
-$ curl -o nginx.tmpl https://raw.githubusercontent.com/jwilder/docker-gen/master/templates/nginx.tmpl
+$ curl -o nginx.tmpl https://raw.githubusercontent.com/tekintian/docker-gen/master/templates/nginx.tmpl
 $ docker run -d --name nginx-gen --volumes-from nginx \
    -v /var/run/docker.sock:/tmp/docker.sock:ro \
    -v /tmp/templates:/etc/docker-gen/templates \
-   -t jwilder/docker-gen -notify-sighup nginx -watch -only-exposed /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+   -t tekintian/docker-gen -notify-sighup nginx -watch -only-exposed /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
 ```
 
 ===
@@ -392,12 +392,12 @@ For example, this is a JSON version of an emitted RuntimeContainer struct:
 
 #### NGINX Reverse Proxy Config
 
-[jwilder/nginx-proxy](https://index.docker.io/u/jwilder/nginx-proxy/) trusted build.
+[tekintian/nginx-proxy](https://index.docker.io/u/tekintian/nginx-proxy/) trusted build.
 
 Start nginx-proxy:
 
 ```
-$ docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock -t jwilder/nginx-proxy
+$ docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock -t tekintian/nginx-proxy
 ```
 
 Then start containers with a VIRTUAL_HOST env variable:
@@ -443,6 +443,9 @@ $ cd <your fork>
 $ make get-deps
 $ make
 ```
+
+ [完整的docker-gen编译打包教程](docs/compile-step-by-step.md)
+
 
 ### TODO
 
