@@ -42,8 +42,10 @@ git clone https://github.com/golang/tools.git tools
 go get github.com/robfig/glock
 # 构建依赖
 make get-deps
-# 生成 docker-gen
+# 生成 通用docker-gen
 make
+# 生成发布版本 docker-gen
+make release
 ```
 
 最后的效果如下：
