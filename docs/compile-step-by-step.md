@@ -23,6 +23,11 @@ echo $PATH
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+
+GOPATH 为go项目的工作路径
+export GOPATH=/media/sf_GoProject
+export PATH=$PATH:$GOPATH/bin
+
 ## 下载go的依赖包  net tools
 ~~~shell
 mkdir -p /root/go/src/golang.org/x/
